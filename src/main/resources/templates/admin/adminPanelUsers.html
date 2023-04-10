@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html" class="h-100"
+      xmlns:th="https://www.thymeleaf.org"
+      th:replace="~{fragment/sourceLayout :: layout(~{::title}, ~{::content})}">
+<title>Панель администратора - Пользователи</title>
+<content>
+    <div class="text-center">
+        <h4 class="fw-bold">Панель администратора - Пользователи</h4>
+        <span th:text="${message}"></span>
+        <div class="row justify-content-end">
+            <div class="col-md-2">
+                <ul class="pagination pagination-sm">
+                    <li class="page-item">
+                        <a class="page-link" th:href="'?page=0' + '&atPage=' + ${usersList.getSize()}"
+                           aria-label="Предыдущая">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    <li class="page-item" th:if="${usersList.getNumber()}!=0">
+                        <a class="page-link"
+                           th:href="'?page=' + ${usersList.getNumber() - 1} + '&atPage=' + ${usersList.getSize()}"
+                           th:text="${usersList.getNumber()}"></a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link active"
+                           th:href="'?page=' + ${usersList.getNumber()} + '&atPage=' + ${usersList.getSize()}"
+                           th:text="${usersList.getNumber()} + 1"></a>
+                    </li>
+                    <li class="page-item" th:if="${usersList.getNumber()} != (${usersList.getTotalPages()} -1)">
+                        <a class="page-link"
+                           th:href="'?page=' + ${usersList.getNumber() + 1} + '&atPage=' + ${usersList.getSize()}"
+                           th:text="${usersList.getNumber() + 2}"></a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link"
+                           th:href="'?page=' + ${usersList.getTotalPages()-1} + '&atPage=' + ${usersList.getSize()}"
+                           aria-label="Следующая">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-2">
+                <ul class="pagination pagination-sm">
+                    <li class="page-item">
+                        <a class="page-link" th:href="'?page=0&atPage=3'"
+                           th:classappend="${usersList.getSize()}==3 ? 'active' : ''">3</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" th:href="'?page=0&atPage=10'"
+                           th:classappend="${usersList.getSize()}==10 ? 'active' : ''">10</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" th:href="'?page=0&atPage=25'"
+                           th:classappend="${usersList.getSize()}==25 ? 'active' : ''">25</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" th:href="'?page=0&atPage=50'"
+                           th:classappend="${usersList.getSize()}==50 ? 'active' : ''">50</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" th:href="'?page=0&atPage=' + ${usersList.getTotalElements()}"
+                           th:classappend="${usersList.getSize() == usersList.getTotalElements()} ? 'active' : ''">Все</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <table class="table table-sm table-light table-striped table-hover border-bottom border-dark">
+            <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Логин</th>
+                <th scope="col">Роль</th>
+                <th>Создан<br>Обновлен</th>
+                <th scope="col">ФИО<br>Паспорт | ВУ</th>
+                <th scope="col">Фото</th>
+                <!--                <th scope="col">Статус</th>-->
+                <th scope="col">Ред</th>
+                <th scope="col">Уд / Вост</th>
+            </tr>
+            </thead>
+            <tbody class="table-group-divider">
+            <tr th:each="user : ${usersList.getContent()}" th:classappend="
+             ${user.isActive()}
+             ? (${user.getRoles().contains(T(m7.only.carrental.entity.user.Role).ROLE_CLIENT) && user.getRoles().size()==1}  ? 'table-danger' : '')
+             : 'table-dark'
+" class="small border-dark">
+                <td th:text="${user.getId()}"></td>
+                <td th:text="${user.getUsername()}"></td>
+                <td class="text-start">
+                    <form th:action="'/admin/users/update/setRoles/' + ${user.getId()}"
+                          th:method="POST">
+                        <div th:each="role : ${T(m7.only.carrental.entity.user.Role).values()}">
+                            <input class="form-check-input" type="checkbox"
+                                   th:id="${role} + ${user.getId()}"
+                                   th:value="${role}"
+                                   th:name="'roles'"
+                                   th:checked="${user.getRoles().contains(role)}">
+                            <label class="form-check-label" th:for="${role} + ${user.getId()}"
+                                   th:text="${role}"></label>
+                        </div>
+                        <input type="submit" value="Изменить" class="btn-sm">
+                    </form>
+                </td>
+                <td>
+                    <div th:text="${#temporals.format(user.getCreated(), 'HH:mm dd.MM.yyyy')}"></div>
+                    <div th:text="${#temporals.format(user.getUpdated(), 'HH:mm dd.MM.yyyy')}"></div>
+                </td>
+                <td class="text-start">
+                <h6 th:text="${user.getPersonalityData()} != null
+                        ? ${user.personalityData.getName()} + ' ' + ${user.personalityData.getPatronymic()} + ' ' + ${user.personalityData.getLastName()}
+                        : '<пусто>'"></h6>
+                    <div th:text="${user.getPersonalityData()} != null ? ${user.getPersonalityData().getPhone()}: '<пусто>'"></div>
+                    <div th:text="${user.getPersonalityData()} != null
+                        ? ${user.getPersonalityData().getPassportNumber()} + ' | ' + ${user.getPersonalityData().getDriverLicenseNumber()}
+                        : '<пусто>'"></div>
+                </td>
+                <td>
+                    <span th:if="${user.getPersonalityData() != null}">
+                    <img th:each="photo : ${user.getPersonalityData().getDocs()}"
+                         th:src="@{/account/personalData/{userId}/{fileName}(userId = ${user.getId()}, fileName=${photo.getFileName()})}"
+                         style="max-width: 2cm; max-height: 2cm" class="pe-1" alt="">
+                </span>
+                </td>
+                <td><a th:href="@{'/admin/users/update/'+ ${user.getId()}}">Ред</a></td>
+                <td>
+                    <a th:href="@{'/admin/users/remove/'+ ${user.getId()}}" th:if="${user.isActive()}">Удалить</a>
+                    <a th:href="@{'/admin/users/reduce/'+ ${user.getId()}}" th:if="${!user.isActive()}">Восстановить</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</content>
+</html>

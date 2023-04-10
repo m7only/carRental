@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html" class="h-100"
+      xmlns:th="https://www.thymeleaf.org"
+      th:replace="~{fragment/sourceLayout :: layout(~{::title}, ~{::content})}">
+<title>Car Rent - Автомобили</title>
+<content>
+    <div th:replace="~{fragment/carFinder :: carFinderForm}"></div>
+    <div class="row row-cols-1 row-cols-md-2 g-4 text-dark">
+        <div class="col d-flex justify-content-center" th:each="car : ${carsList}">
+            <div class="card mb-3">
+                <div class="row g-0">
+                    <div class="col-md-8 w-50">
+                        <div th:id="'carId_' + ${car.getId()}"
+                             class="carousel slide">
+                            <div class="carousel-indicators">
+                                <button type="button" class="border border-dark rounded bg-black"
+                                        th:each="photo : ${car.getPhotos()}"
+                                        th:data-bs-target="'carId_' + ${car.getId()}"
+                                        th:data-bs-slide-to="${photoStat.index}"
+                                        th:classappend="${photoStat.index} == 0 ? 'active' : ''"
+                                        th:aria-current="${photoStat.index} == 0 ? 'true' : ''"
+                                        th:aria-label="'Slide ' + ${photoStat.index + 1}"></button>
+                            </div>
+                            <div class="carousel-inner d-flex align-items-center" style="height: 300px;">
+                                <div class="carousel-item ps-3 pb-3" th:each="photo : ${car.getPhotos()}"
+                                     th:classappend="${photoStat.index} == 0 ? 'active' : ''">
+                                    <img th:src="@{/cars/{carId}/{fileName}(carId = ${car.getId()}, fileName='p_' + ${photo.getFileName()})}"
+                                         class="w-100 rounded-3" alt="">
+                                </div>
+                            </div>
+                            <button class="carousel-control-prev" type="button"
+                                    th:data-bs-target="'#carId_' + ${car.getId()}"
+                                    data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button class="carousel-control-next" type="button"
+                                    th:data-bs-target="'#carId_' + ${car.getId()}"
+                                    data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                            </button>
+                        </div>
+                        <!--                            -->
+                    </div>
+                    <div class="col-md-4 w-50">
+                        <div class="card-body h-100">
+                            <h5 class="card-title" th:text="${car.getManufacturer()} + ' ' + ${car.getModel()}"></h5>
+                            <p class="card-text"><small class="text-body-secondary"
+                                                        th:text="${car.getCarBody().getCarBodyType()}"></small></p>
+                            <div class="row">
+                                <div class="col-md-5 ps-1 pe-0">
+                                    <div class="row">
+                                        <div class="col-md-auto ps-0 pe-0">
+                                            <img src="/images/power.png" width="48" height="48" alt="">
+                                        </div>
+                                        <div class="col">
+                                            <div class="row">
+                                                <div class="col ps-0"><small><small class="text-muted">Мощность</small></small>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col ps-0"><small><small
+                                                        th:text="${car.getPower()} + ' л.с.'"></small></small></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 ps-1">
+                                    <div class="row">
+                                        <div class="col-md-auto ps-0 pe-0">
+                                            <img src="/images/canister.png" width="48" height="48" alt="">
+                                        </div>
+                                        <div class="col">
+                                            <div class="row">
+                                                <div class="col ps-0"><small><small
+                                                        class="text-muted">Топливо</small></small></div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col ps-0"><small><small
+                                                        th:text="${car.getEngineType().getEngineType()}"></small></small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-5 pe-0 ps-1">
+                                    <div class="row">
+                                        <div class="col-md-auto ps-0 pe-0">
+                                            <img src="/images/wheel.png" width="48" height="48" alt="">
+                                        </div>
+                                        <div class="col">
+                                            <div class="row">
+                                                <div class="col ps-0"><small><small
+                                                        class="text-muted">Привод</small></small></div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col ps-0"><small><small
+                                                        th:text="${car.getWheelDriveType().getWheelDrive()}"></small></small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 ps-1 pe-0">
+                                    <div class="row">
+                                        <div class="col-md-auto ps-0 pe-0">
+                                            <img src="/images/gearbox.png" width="48" height="48" alt="">
+                                        </div>
+                                        <div class="col">
+                                            <div class="row">
+                                                <div class="col ps-0"><small><small
+                                                        class="text-muted">Коробка</small></small></div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col ps-0"><small><small
+                                                        th:text="${car.getGearbox().getGearboxType()}"></small></small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 text-center p-3">
+                                    <h5 class="card-title" th:text="${car.getPrice()} + ' ₽/сут'"></h5>
+                                </div>
+                            </div>
+                            <div class="row"
+                                 th:if="${endDate}!=null AND ${startDate} != null">
+                                <div class="col-md-6">
+                                    <h5 class="card-title text-end pt-2"
+                                        th:text="${startDate.until(endDate, T(java.time.temporal.ChronoUnit).DAYS)}*${car.getPrice()} + ' ₽'">
+                                    </h5>
+                                </div>
+                                <div class="col-md-6">
+<!--                                    <a th:href="@{/order(startDate=${startDate}, endDate=${endDate}, carId=${car.getId()})}">-->
+<!--                                    <form th:action="'/admin/cars/add'"-->
+<!--                                          enctype="multipart/form-data" th:method="POST" class="form-floating g-3">-->
+                                    <form th:action="@{/order}" th:method="post">
+                                        <input type="hidden" name="startDate" th:value="${startDate}">
+                                        <input type="hidden" name="endDate" th:value="${endDate}">
+                                        <input type="hidden" name="carId" th:value="${car.getId()}">
+                                        <button type="submit" class="btn btn-warning">Заказать</button>
+<!--                                    </a>-->
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</content>
+</html>

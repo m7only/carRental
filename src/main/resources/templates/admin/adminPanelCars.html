@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html" class="h-100"
+      xmlns:th="https://www.thymeleaf.org"
+      th:replace="~{fragment/sourceLayout :: layout(~{::title}, ~{::content})}">
+<title>Панель администратора - Автомобили</title>
+<content>
+    <div class="container p-3 text-center">
+        <h4 class="fw-bold">Панель администратора - Автомобили</h4>
+        <span th:text="${message}"></span>
+        <div class="row justify-content-end">
+            <div class="col text-start">
+                <a href="/admin/cars/add">
+                    <button type="button" class="btn btn-outline-light" data-bs-toggle="modal"
+                            data-bs-target="#ModalRegistration">
+                        Добавить автомобиль
+                    </button>
+                </a>
+            </div>
+            <div class="col-md-2">
+                <ul class="pagination pagination-sm">
+                    <li class="page-item">
+                        <a class="page-link" th:href="'?page=0' + '&atPage=' + ${carsList.getSize()}"
+                           aria-label="Предыдущая">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    <li class="page-item" th:if="${carsList.getNumber()}!=0">
+                        <a class="page-link"
+                           th:href="'?page=' + ${carsList.getNumber() - 1} + '&atPage=' + ${carsList.getSize()}"
+                           th:text="${carsList.getNumber()}"></a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link active"
+                           th:href="'?page=' + ${carsList.getNumber()} + '&atPage=' + ${carsList.getSize()}"
+                           th:text="${carsList.getNumber()} + 1"></a>
+                    </li>
+                    <li class="page-item" th:if="${carsList.getNumber()} != (${carsList.getTotalPages()} -1)">
+                        <a class="page-link"
+                           th:href="'?page=' + ${carsList.getNumber() + 1} + '&atPage=' + ${carsList.getSize()}"
+                           th:text="${carsList.getNumber() + 2}"></a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link"
+                           th:href="'?page=' + ${carsList.getTotalPages()-1} + '&atPage=' + ${carsList.getSize()}"
+                           aria-label="Следующая">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-2">
+                <ul class="pagination pagination-sm">
+                    <li class="page-item">
+                        <a class="page-link" th:href="'?page=0&atPage=3'"
+                           th:classappend="${carsList.getSize()}==3 ? 'active' : ''">3</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" th:href="'?page=0&atPage=10'"
+                           th:classappend="${carsList.getSize()}==10 ? 'active' : ''">10</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" th:href="'?page=0&atPage=25'"
+                           th:classappend="${carsList.getSize()}==25 ? 'active' : ''">25</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" th:href="'?page=0&atPage=50'"
+                           th:classappend="${carsList.getSize()}==50 ? 'active' : ''">50</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" th:href="'?page=0&atPage=' + ${carsList.getTotalElements()}"
+                           th:classappend="${carsList.getSize() == carsList.getTotalElements()} ? 'active' : ''">Все</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!--        <span th:text="${carsList.getContent().}">asd</span>-->
+        <table class="table table-sm table-light table-striped table-hover border-bottom border-dark">
+            <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Модель, год, цвет</th>
+                <th scope="col">Госномер</th>
+                <th scope="col">Класс</th>
+                <th scope="col">Главное фото</th>
+                <th scope="col">Фото</th>
+                <th scope="col">Ред</th>
+                <th scope="col">Уд / Вост</th>
+            </tr>
+            </thead>
+            <tbody class="table-group-divider">
+
+            <tr th:each="car : ${carsList.getContent()}"
+                th:classappend="${car.getActive()} ?  '' : 'table-dark'"
+                class="small sborder-bottom border-dark">
+                <td th:text="${car.getId()}"></td>
+                <td class="text-start">
+                    <h6 th:text="${car.getManufacturer()} + ' ' + ${car.getModel()} +', ' + ${car.getYear()}"></h6>
+                    <div th:text="${car.getColor()} + ', ' + ${car.getCarBody().getCarBodyType()} + ', ' + ${car.getGearbox().getGearboxType()}"></div>
+                </td>
+                <td th:text="${car.getPlate()}"></td>
+                <td>
+                    <div th:each="classification : ${car.getClassifications()}"
+                         th:text="${classification.getClassificationType()}"></div>
+                </td>
+                <td>
+                    <img th:each="photo : ${car.getPhotos()}"
+                         th:if="${photo.getCover()}"
+                         th:src="@{/cars/{carId}/{fileName}(carId = ${car.getId()}, fileName='p_' + ${photo.getFileName()})}"
+                         class="img-thumbnail" style="max-width: 100px; max-height: 100px" alt="">
+                </td>
+                <td>
+                    <img th:each="photo : ${car.getPhotos()}"
+                         th:unless="${photo.getCover()}"
+                         th:src="@{/cars/{carId}/{fileName}(carId = ${car.getId()}, fileName='p_' + ${photo.getFileName()})}"
+                         class="img-thumbnail" style="max-width: 100px; max-height: 100px" alt="">
+                </td>
+                <td>
+                    <a th:href="@{'/admin/cars/update/' + ${car.getId()}}">Ред</a>
+                </td>
+                <td>
+                    <a th:href="@{'/admin/cars/remove/'+ ${car.getId()}}" th:if="${car.getActive()}">Уд</a>
+                    <a th:href="@{'/admin/cars/reduce/'+ ${car.getId()}}"
+                       th:unless="${car.getActive()}">Вос</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</content>
+</html>

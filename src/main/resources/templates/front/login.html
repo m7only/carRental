@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html" class="h-100"
+      xmlns:th="https://www.thymeleaf.org"
+      th:replace="~{fragment/sourceLayout :: layout(~{::title}, ~{::content})}">
+<title>Car Rent - Вход</title>
+<content>
+        <div class="container p-3 text-center">
+            <h4 class="fw-bold">Вход</h4>
+        </div>
+        <div class="p-5 pt-0 w-50 mx-auto">
+            <div class="rounded border mb-3 text-center bg-danger" style="--bs-bg-opacity: 0.5" th:if="${param.error}">
+                Неверный логин или пароль.
+            </div>
+            <form th:action="@{/login}" method="post" class="form-floating">
+                <div class="form-floating mb-3">
+                    <input type="text" name="username" class="form-control rounded-3" id="floatingInputLogin"
+                           placeholder="name@example.com2">
+                    <label for="floatingInputLogin" class="text-dark">Электронная почта</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="password" name="password" class="form-control rounded-3" id="floatingPasswordLogin"
+                           placeholder="Password2">
+                    <label for="floatingPasswordLogin" class="text-dark">Пароль</label>
+                </div>
+                <button type="submit" class="w-100 mb-2 btn btn-lg rounded-3 btn-warning">Войти</button>
+                <small class="text-white">Нажимая "Войти" вы соглашаетесь с условиями пользования.</small>
+            </form>
+        </div>
+</content>
+</html>
