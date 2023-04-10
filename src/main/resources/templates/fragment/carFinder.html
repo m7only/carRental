@@ -1,0 +1,69 @@
+<html lang="en" xmlns="http://www.w3.org/1999/html" class="h-100"
+      xmlns:th="https://www.thymeleaf.org"
+>
+<div th:fragment="carFinderForm">
+    <h5 class="fw-bold pt-3 text-center">Выбите нужные даты и тип автомобиля</h5>
+    <form th:action="@{/cars}" th:method="get">
+        <div class="row mb-3 justify-content-center">
+            <div class="col-md-2 form-floating">
+                <input name="startDate" id="startDate" class="form-control" type="date" placeholder="31.03.2023"
+                       th:value="${startDate}"
+                       required/>
+                <label for="startDate" class="text-dark ms-2">Начало</label>
+            </div>
+            <div class="col-md-2  form-floating">
+                <input name="endDate" id="endDate" class="form-control" type="date" placeholder="30.03.2023"
+                       th:value="${endDate}"
+                       required/>
+                <label for="endDate" class="text-dark ms-2">Завершение</label>
+            </div>
+            <div class="col-md-2 dropdown form-floating">
+                <button class="btn btn-light dropdown-toggle w-100 h-100" type="button" data-bs-toggle="dropdown"
+                        data-bs-auto-close="outside" aria-expanded="false">
+                    Класс авто
+                </button>
+                <ul class="dropdown-menu">
+                    <li th:each="classification : ${T(m7.only.carrental.entity.car.Classification).values()}">
+                        <div class="form-check m-3">
+                            <input type="checkbox"
+                                   th:name="'classifications'"
+                                   th:id="${classification}"
+                                   th:value="${classification}"
+                                   th:checked="${checkedClassifications} != null AND ${checkedClassifications.contains(classification)}"
+                                   class="form-check-input form-floating">
+                            <!--                            th:checked="${user.getRoles().contains(role)}"-->
+                            <label th:for="${classification}"
+                                   th:text="${classification.getClassificationType()}"
+                                   class="form-check-label text-dark"></label>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-2 dropdown form-floating">
+                <button class="btn btn-light dropdown-toggle w-100 h-100" type="button" data-bs-toggle="dropdown"
+                        data-bs-auto-close="outside" aria-expanded="false">
+                    Кузов авто
+                </button>
+                <ul class="dropdown-menu">
+                    <li th:each="carBody : ${T(m7.only.carrental.entity.car.CarBody).values()}">
+                        <div class="form-check m-3">
+                            <input type="checkbox"
+                                   th:name="'carBodies'"
+                                   th:id="${carBody}"
+                                   th:value="${carBody}"
+                                   th:checked="${checkedCarBodies} != null AND ${checkedCarBodies.contains(carBody)}"
+                                   class="form-check-input form-floating">
+                            <label th:for="${carBody}"
+                                   th:text="${carBody.getCarBodyType()}"
+                                   class="form-check-label text-dark"></label>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-2 form-floating">
+                <button class="btn btn-warning w-100 h-100" type="submit"> Найти</button>
+            </div>
+        </div>
+    </form>
+</div>
+</html>

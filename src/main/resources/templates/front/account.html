@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html" class="h-100"
+      xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+      th:replace="~{fragment/sourceLayout :: layout(~{::title}, ~{::content})}">
+<title>Car Rent - Настройки аккаунта</title>
+<content>
+    <div class="row w-100">
+        <div class="col">
+            <div class="col p-3 text-center">
+                <h5 class="fw-bold">Настройки аккаунта</h5>
+                <div class="row w-auto justify-content-center"
+                     sec:authorize="hasRole('ROLE_APPROVED_CLIENT')">
+                    <h5 class="fw-bold border border-success rounded-3 bg-success w-auto">Ваш аккаунт подтвержден</h5>
+                </div>
+                <div class="row w-auto justify-content-center"
+                     sec:authorize="hasRole('ROLE_CLIENT') && !hasRole('ROLE_APPROVED_CLIENT')">
+                    <h5 class="fw-bold border border-warning rounded-3 bg-warning w-auto">Загрузите документы и
+                        дождитесь подтверждения аккаунта</h5>
+                </div>
+            </div>
+            <div th:text="${message}" class="text-center"></div>
+            <div class="col">
+                <form th:action="'/account'"
+                      enctype="multipart/form-data" th:method="POST" class="form-floating g-3">
+                    <div class="row mb-3 justify-content-center">
+                        <div class="col-md-2">
+                            <label for="name" class="ps-2">Имя</label>
+                            <input type="text" class="form-control rounded-3" name="name" id="name" required
+                                   th:value="${personalityData.getName() != null} ? ${personalityData.getName()} : ''"
+                                   placeholder="Имя">
+                        </div>
+                        <div class="col-md-2">
+                            <label for="last_name" class="ps-2">Фамилия</label>
+                            <input type="text" name="lastName" class="form-control rounded-3" id="last_name" required
+                                   th:value="${personalityData.getLastName()!=null} ? ${personalityData.getLastName()} : ''"
+                                   placeholder="Фамилия">
+                        </div>
+                        <div class="col-md-2">
+                            <label for="patronymic" class="ps-2">Отчество</label>
+                            <input type="text" name="patronymic" class="form-control rounded-3" id="patronymic" required
+                                   th:value="${personalityData.getPatronymic() != null} ? ${personalityData.getPatronymic()} : ''"
+                                   placeholder="Отчество">
+                        </div>
+                        <div class="col-md-2">
+                            <label for="phone" class="ps-2">Телефон</label>
+                            <input type="text" name="phone" class="form-control rounded-3" id="phone" required
+                                   th:value="${personalityData.getPhone() != null} ? ${personalityData.getPhone()} : ''"
+                                   placeholder="Телефон">
+                        </div>
+                    </div>
+
+                    <div class="row mb-3 justify-content-center">
+                        <div class="col-md-3">
+                            <label for="passport_number" class="ps-2">Серия и номер паспорта</label>
+                            <input type="text" name="passportNumber" class="form-control rounded-3" id="passport_number"
+                                   required
+                                   th:value="${personalityData.getPassportNumber() != null} ? ${personalityData.getPassportNumber()} : ''"
+                                   placeholder="Серия и номер паспорта">
+                        </div>
+                        <div class="col-md-5">
+                            <label for="photo_passport" class="ps-2">Фото первой страницы паспорта</label>
+                            <input type="file" name="files" class="form-control rounded-3" id="photo_passport"
+                                   placeholder="Фото паспорт">
+                        </div>
+                    </div>
+
+                    <div class="row mb-3 justify-content-center">
+                        <div class="col-md-3">
+                            <label for="driver_licence_number" class="ps-2">Номер ВУ</label>
+                            <input type="text" name="driverLicenseNumber" class="form-control rounded-3"
+                                   id="driver_licence_number"
+                                   required
+                                   th:value="${personalityData.getDriverLicenseNumber() != null} ? ${personalityData.getDriverLicenseNumber()} : ''"
+                                   placeholder="Номер ВУ">
+                        </div>
+                        <div class="col-md-5">
+                            <label for="photo_driver_licence" class="ps-2">Фото ВУ</label>
+                            <input type="file" name="files" class="form-control rounded-3" id="photo_driver_licence"
+                                   placeholder="Фото ВУ">
+                        </div>
+                    </div>
+                    <div class="row justify-content-center">
+                        <div th:each="photo : ${personalityData.getDocs()}" class="mb-3 me-3"
+                             style="max-width: 20rem">
+                            <img th:src="@{/account/personalData/{userId}/{fileName}(userId = ${personalityData.getUser().getId()}, fileName=${photo.getFileName()})}"
+                                 class="img-thumbnail" alt="">
+                        </div>
+                    </div>
+                    <div class="row mb-3 justify-content-center">
+                        <button type="submit" class="w-25 mb-2 btn btn-lg rounded-3 btn-warning">Обновить</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <div class="container p-3 text-center">
+                <h5 class="fw-bold">Ваши заказы</h5>
+                <div th:text="${message}" class="text-center"></div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <table class="table table-sm table-light table-striped table-hover border-bottom border-dark">
+                <thead>
+                <tr>
+                    <th scope="col">Автомобиль</th>
+                    <th scope="col">Клиент</th>
+                    <th scope="col">Выдача авто</th>
+                    <th scope="col">Сдача авто</th>
+                    <th scope="col">Состояние</th>
+                    <th scope="col">Стоимость</th>
+                    <th scope="col">Оплата</th>
+                </tr>
+                </thead>
+                <tbody class="table-group-divider">
+                <tr th:each="order : ${ordersList}"
+                    class="small border-bottom border-dark"
+                    th:id="'order_' + ${order.getId()}">
+                    <td class="text-start">
+                        <h6 th:text="${order.getCar().getManufacturer()} + ' ' + ${order.getCar().getModel()} +', ' + ${order.getCar().getYear()}"></h6>
+                        <div class="row">
+                            <div class="col-md-auto">
+                                <img th:each="photo : ${order.getCar().getPhotos()}"
+                                     th:if="${photo.getCover()}"
+                                     th:src="@{/cars/{carId}/{fileName}(carId = ${order.getCar().getId()}, fileName='p_' + ${photo.getFileName()})}"
+                                     class="img-thumbnail" style="max-width: 100px; max-height: 100px" alt="">
+                            </div>
+                            <div class="col-md">
+                                <div th:text="${order.getCar().getPrice()}" class="fw-bold"></div>
+                                <div th:text="${order.getCar().getPlate()}"></div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="text-start">
+                        <h6 th:text="
+                        ${order.getUser().getPersonalityData().getName()}
+                        + ' '
+                        + ${order.getUser().getPersonalityData().getPatronymic()}
+                        + ' '
+                        + ${order.getUser().getPersonalityData().getLastName()}">
+                        </h6>
+                        <div th:text="${order.getUser().getPersonalityData().getPhone()}"></div>
+                    </td>
+                    <td>
+                        <div th:text="${#temporals.format(order.getStart(), 'HH:mm dd.MM.yyyy')}"></div>
+                    </td>
+                    <td>
+                        <div th:text="${#temporals.format(order.getEnd(), 'HH:mm dd.MM.yyyy')}"></div>
+                    </td>
+                    <td>
+                        <div th:text="${order.getStatus().getStatus()}"></div>
+                        <a th:href="'/order/cancel/' + ${order.getId()}"
+                           th:if="${order.getStatus()} == ${T(m7.only.carrental.entity.order.OrderStatus).PAID}
+                           OR
+                                  ${order.getStatus()} == ${T(m7.only.carrental.entity.order.OrderStatus).CREATED}"
+                           class="text-danger">Отменить</a>
+                    </td>
+                    <td>
+                        <h6 th:text="${order.getTotalPrice()}"></h6>
+                    </td>
+                    <td>
+                        <a th:href="'#order_' + ${order.getId()}">
+                            <button class="btn btn-success">Оплатить</button>
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</content>
+</html>

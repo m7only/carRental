@@ -1,0 +1,155 @@
+<html lang="en" xmlns="http://www.w3.org/1999/html" class="h-100"
+      xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<div class="container bg-dark rounded mt-2 mb-3 pe-0" style="--bs-bg-opacity: .6;" th:fragment="nav">
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container pe-0">
+            <a class="navbar-brand" href="http://localhost:8080/">
+                <svg class="bi" width="24" height="24" aria-label="Logo">
+                    <use xlink:href="#logo"/>
+                </svg>
+                Car Rent
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#top-navbar"
+                    aria-controls="top-navbar" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse pe-0" id="top-navbar">
+                <!--                th:if="${alreadyExist}"-->
+                <div class="row w-100 pe-0">
+                    <div class="col">
+                        <div th:unless="${isAdminPanel}">
+                            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                                <li class="nav-item">
+                                    <a class="nav-link active" aria-current="page" href="/cars">Автопарк</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/prices">Цены</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/terms">Условия</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/about">О компании</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div th:if="${isAdminPanel}" sec:authorize="hasAnyRole('ROLE_MANAGER','ROLE_ADMIN')">
+                            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                                <li class="nav-item">
+                                    <a class="nav-link active" aria-current="page" href="/admin/cars">Автомобили</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/admin/users">Пользователи</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/admin/orders">Заказы</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col pe-0">
+                        <div class="text-end pe-0" sec:authorize="isAnonymous()">
+                            <button type="button" class="btn btn-outline-light" data-bs-toggle="modal"
+                                    data-bs-target="#ModalRegistration">
+                                Регистрация
+                            </button>
+                            <button type="button" class="btn btn-warning me-2" data-bs-toggle="modal"
+                                    data-bs-target="#ModalLogin">
+                                Войти
+                            </button>
+                        </div>
+                        <div class="text-end pe-0" sec:authorize="isAuthenticated()">
+                            <form th:action="@{/logout}" method="post">
+                                <a href="/account" sec:authorize="hasAnyRole('ROLE_CLIENT','ROLE_APPROVED_CLIENT')">
+                                    <button type="button" class="btn btn-outline-light" data-bs-toggle="modal"
+                                            data-bs-target="#ModalRegistration">
+                                        Личный кабинет
+                                    </button>
+                                </a>
+                                <a href="/admin/cars" sec:authorize="hasAnyRole('ROLE_MANAGER','ROLE_ADMIN')"
+                                   th:unless="${isAdminPanel}">
+                                    <button type="button" class="btn btn-outline-light" data-bs-toggle="modal"
+                                            data-bs-target="#ModalRegistration">
+                                        Панель администратора
+                                    </button>
+                                </a>
+                                <a href="/" sec:authorize="hasAnyRole('ROLE_MANAGER','ROLE_ADMIN')"
+                                   th:if="${isAdminPanel}">
+                                    <button type="button" class="btn btn-outline-light" data-bs-toggle="modal"
+                                            data-bs-target="#ModalRegistration">
+                                        Вернуться на сайт
+                                    </button>
+                                </a>
+                                <button type="submit" class="btn btn-warning me-2">
+                                    Выход
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+</div>
+<div class="modal fade py-5" tabindex="-1" role="dialog" id="ModalLogin" th:fragment="ModalLogin">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content rounded-4 shadow">
+            <div class="modal-header p-5 pb-4 border-bottom-0">
+                <h1 class="fw-bold mb-0 fs-2">Вход</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-5 pt-0">
+                <form th:action="@{/login}" method="post">
+                    <div class="form-floating mb-3">
+                        <input type="text" name="username" class="form-control rounded-3" id="floatingInput"
+                               placeholder="name@example.com">
+                        <label for="floatingInput">Электронная почта</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="password" name="password" class="form-control rounded-3" id="floatingPassword"
+                               placeholder="Password">
+                        <label for="floatingPassword">Пароль</label>
+                    </div>
+                    <button type="submit" class="w-100 mb-2 btn btn-lg rounded-3 btn-warning">Войти</button>
+                    <small class="text-muted">Нажимая "Войти" вы соглашаетесь с условиями пользования.</small>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade py-5" tabindex="-1" role="dialog" id="ModalRegistration" th:fragment="ModalRegistration">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content rounded-4 shadow">
+            <div class="modal-header p-5 pb-4 border-bottom-0">
+                <h1 class="fw-bold mb-0 fs-2">Регистрация</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-5 pt-0">
+                <form th:action="@{/registration}" method="post"
+                      oninput='confirmedPassword.setCustomValidity(confirmedPassword.value !== password.value ? "Пароли не совпадают" : "")'>
+                    <div class="form-floating mb-3">
+                        <input type="text" name="username" class="form-control rounded-3" id="floatingInput2"
+                               placeholder="name@example.com">
+                        <label for="floatingInput2">Электронная почта</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="password" name="password" class="form-control rounded-3" id="floatingPassword2"
+                               placeholder="Password">
+                        <label for="floatingPassword2">Пароль</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="password" name="confirmedPassword" class="form-control rounded-3"
+                               id="confirmedPassword"
+                               placeholder="Password">
+                        <label for="confirmedPassword">Повторите пароль</label>
+                    </div>
+                    <button type="submit" class="w-100 mb-2 btn btn-lg rounded-3 btn-warning">Войти</button>
+                    <small class="text-muted">Нажимая "Войти" вы соглашаетесь с условиями пользования.</small>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</html>
