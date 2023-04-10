@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html" class="h-100"
+      xmlns:th="https://www.thymeleaf.org"
+      th:replace="~{fragment/sourceLayout :: layout(~{::title}, ~{::content})}">
+<title>Car Rent - Отмена заказа</title>
+<content>
+    <div class="row">
+        <div class="col">
+            <div class="container p-3 text-center">
+                <h5 class="fw-bold">Вы действительно хотите отменить заказ?</h5>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <table class="table table-sm table-light table-striped table-hover border-bottom border-dark">
+                <thead>
+                <tr>
+                    <th scope="col">Автомобиль</th>
+                    <th scope="col">Клиент</th>
+                    <th scope="col">Выдача авто</th>
+                    <th scope="col">Сдача авто</th>
+                    <th scope="col">Состояние</th>
+                    <th scope="col">Стоимость</th>
+                </tr>
+                </thead>
+                <tbody class="table-group-divider">
+                <tr class="small border-bottom border-dark">
+                    <td class="text-start">
+                        <h6 th:text="${order.getCar().getManufacturer()} + ' ' + ${order.getCar().getModel()} +', ' + ${order.getCar().getYear()}"></h6>
+                        <div class="row">
+                            <div class="col-md-auto">
+                                <img th:each="photo : ${order.getCar().getPhotos()}"
+                                     th:if="${photo.getCover()}"
+                                     th:src="@{/cars/{carId}/{fileName}(carId = ${order.getCar().getId()}, fileName='p_' + ${photo.getFileName()})}"
+                                     class="img-thumbnail" style="max-width: 100px; max-height: 100px" alt="">
+                            </div>
+                            <div class="col-md">
+                                <div th:text="${order.getCar().getPrice()}" class="fw-bold"></div>
+                                <div th:text="${order.getCar().getPlate()}"></div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="text-start">
+                        <h6 th:text="
+                        ${order.getUser().getPersonalityData().getName()}
+                        + ' '
+                        + ${order.getUser().getPersonalityData().getPatronymic()}
+                        + ' '
+                        + ${order.getUser().getPersonalityData().getLastName()}">
+                        </h6>
+                        <div th:text="${order.getUser().getPersonalityData().getPhone()}"></div>
+                    </td>
+                    <td>
+                        <div th:text="${#temporals.format(order.getStart(), 'HH:mm dd.MM.yyyy')}"></div>
+                    </td>
+                    <td>
+                        <div th:text="${#temporals.format(order.getEnd(), 'HH:mm dd.MM.yyyy')}"></div>
+                    </td>
+                    <td>
+                        <div th:text="${order.getStatus().getStatus()}"></div>
+                    </td>
+                    <td>
+                        <h6 th:text="${order.getTotalPrice()}"></h6>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="row pb-3">
+                <div class="col-md-6 d-flex justify-content-end">
+                    <form th:action="'/order/cancel/' + ${order.getId()}" th:method="post">
+                        <button type="submit" class="btn btn-danger" style="width: 5rem">Да</button>
+                    </form>
+                </div>
+                <div class="col-md-6">
+                    <a th:href="'/account#order_' + ${order.getId()}"><button type="submit" class="btn btn-success" style="width: 10rem">Нет</button></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</content>
+</html>

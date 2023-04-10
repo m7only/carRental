@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html" class="h-100"
+      xmlns:th="https://www.thymeleaf.org"
+      th:replace="~{fragment/sourceLayout :: layout(~{::title}, ~{::content})}">
+<title>Car Rent - Регистрация</title>
+<content>
+    <div class="container p-3 text-center">
+        <h4 class="fw-bold">Регистрация</h4>
+    </div>
+    <div class="p-5 pt-0 w-50 mx-auto">
+        <form th:action="@{/registration}" method="post"
+              oninput='confirmedPassword.setCustomValidity(
+                  confirmedPassword.value !== password.value
+                  ? "Пароли не совпадают"
+                  : "")'>
+            <div class="form-floating mb-3">
+                <input type="text" name="username" class="form-control rounded-3" id="username"
+                       placeholder="name@example.com" th:classappend="${alreadyExist} ?  'is-invalid' : ''">
+                <div id="username2Feedback" class="invalid-feedback text-white" th:if="${alreadyExist}">
+                    Пользователь с таким именем уже существует.
+                </div>
+                <label for="username" class="text-dark">Электронная почта</label>
+
+            </div>
+            <div class="form-floating mb-3">
+                <input type="password" name="password" class="form-control rounded-3" id="floatingPassword2"
+                       placeholder="Password" th:classappend="${passwordNotConfirmed} ?  'is-invalid' : ''">
+                <div id="floatingInput2Feedback" class="invalid-feedback text-white" th:if="${passwordNotConfirmed}">
+                    Пароли не совпадают.
+                </div>
+                <label for="floatingPassword2" class="text-dark">Пароль</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input type="password" name="confirmedPassword" class="form-control rounded-3" id="confirmedPassword"
+                       placeholder="Password" th:classappend="${passwordNotConfirmed} ?  'is-invalid' : ''">
+                <label for="confirmedPassword" class="text-dark">Повторите пароль</label>
+            </div>
+            <button type="submit" class="w-100 mb-2 btn btn-lg rounded-3 btn-warning">Войти</button>
+            <small class="text-white">Нажимая "Войти" вы соглашаетесь с условиями пользования.</small>
+        </form>
+    </div>
+</content>
+</html>

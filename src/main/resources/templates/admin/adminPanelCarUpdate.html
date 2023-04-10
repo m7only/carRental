@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html" class="h-100"
+      xmlns:th="https://www.thymeleaf.org"
+      th:replace="~{fragment/sourceLayout :: layout(~{::title}, ~{::content})}">
+<title>Car Rent - Настройки аккаунта</title>
+<content>
+    <div class="row w-100">
+        <div class="col">
+            <div class="col container p-3 text-center">
+                <h5 class="fw-bold"
+                    th:text="'Настройки автомобиля ID ' + ${car.getId()} + ' ' + ${car.getPlate()} + ' ' + ${car.getManufacturer()} + ' ' + ${car.getModel()}"></h5>
+            </div>
+            <div th:text="${message}" class="text-center"></div>
+            <div class="col">
+                <form th:action="'/admin/cars/update/' + ${car.getId()}"
+                      enctype="multipart/form-data" th:method="POST" class="form-floating g-3">
+                    <div class="row mb-3 justify-content-center">
+                        <div class="col-md-2">
+                            <label for="manufacturer" class="ps-2">Марка</label>
+                            <input type="text" class="form-control rounded-3" name="manufacturer" id="manufacturer"
+                                   th:value="${car.getManufacturer() != null} ? ${car.getManufacturer()} : ''"
+                                   required
+                                   placeholder="Марка">
+                        </div>
+                        <div class="col-md-2">
+                            <label for="model" class="ps-2">Модель</label>
+                            <input type="text" name="model" class="form-control rounded-3" id="model" required
+                                   th:value="${car.getModel()!=null} ? ${car.getModel()} : ''"
+                                   placeholder="Модель">
+                        </div>
+                        <div class="col-md-2">
+                            <label for="year" class="ps-2">Год</label>
+                            <input type="text" name="year" class="form-control rounded-3" id="year" required
+                                   th:value="${car.getYear() != null} ? ${car.getYear()} : ''"
+                                   placeholder="Год">
+                        </div>
+                        <div class="col-md-2">
+                            <label for="plate" class="ps-2">Госномер</label>
+                            <input type="text" name="plate" class="form-control rounded-3" id="plate" required
+                                   th:value="${car.getPlate() != null} ? ${car.getPlate()} : ''"
+                                   placeholder="Госномер">
+                        </div>
+
+                    </div>
+
+                    <div class="row mb-3 justify-content-center">
+                        <div class="col-md-2">
+                            <label for="color" class="ps-2">Цвет</label>
+                            <input type="text" name="color" class="form-control rounded-3" id="color" required
+                                   th:value="${car.getColor() != null} ? ${car.getColor()} : ''"
+                                   placeholder="Цвет">
+                        </div>
+
+                        <div class="col-md-2">
+                            <label for="gearbox" class="ps-2">Коробка</label>
+                            <select name="gearbox" class="form-select rounded-3" id="gearbox" required>
+                                <option
+                                        th:each="gearbox : ${T(m7.only.carrental.entity.car.Gearbox).values()}"
+                                        th:text="${gearbox.getGearboxType()}"
+                                        th:value="${gearbox}"
+                                        th:selected="${car.gearbox} == ${gearbox}"
+                                >
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="carBody" class="ps-2">Кузов</label>
+                            <select name="carBody" class="form-select rounded-3" id="carBody" required>
+                                <option
+                                        th:each="carBody : ${T(m7.only.carrental.entity.car.CarBody).values()}"
+                                        th:text="${carBody.getCarBodyType()}"
+                                        th:value="${carBody}"
+                                        th:selected="${car.getCarBody()} == ${carBody}"
+                                >
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="price" class="ps-2">Стоимость аренды</label>
+                            <input type="text" name="price" class="form-control rounded-3" id="price" required
+                                   th:value="${car.getPrice() != null} ? ${car.getPrice()} : ''"
+                                   placeholder="Стоимость аренды">
+                        </div>
+                    </div>
+                    <div class="row mb-3 justify-content-center text-center">
+                        <div class="col-md-2">
+                            <label for="power" class="ps-2">Мощность</label>
+                            <input type="text" name="power" class="form-control rounded-3" id="power" required
+                                   th:value="${car.getPower() != null} ? ${car.getPower()} : ''"
+                                   placeholder="Мощность">
+                        </div>
+                        <div class="col-md-2">
+                            <label for="engineType" class="ps-2">Тип двигателя</label>
+                            <select name="engineType" class="form-select rounded-3" id="engineType" required>
+                                <option
+                                        th:each="enginType : ${T(m7.only.carrental.entity.car.EngineType).values()}"
+                                        th:text="${enginType.getEngineType()}"
+                                        th:value="${enginType}"
+                                        th:selected="${car.getEngineType()} == ${enginType}"
+                                >
+                                </option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-2">
+                            <label for="wheelDriveType" class="ps-2">Привод</label>
+                            <select name="wheelDriveType" class="form-select rounded-3" id="wheelDriveType" required>
+                                <option
+                                        th:each="wheelDriveType : ${T(m7.only.carrental.entity.car.WheelDriveType).values()}"
+                                        th:text="${wheelDriveType.getWheelDrive()}"
+                                        th:value="${wheelDriveType}"
+                                        th:selected="${car.getWheelDriveType()} == ${wheelDriveType}"
+                                >
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row mb-3 justify-content-center text-center">
+                        <div class="col">
+                            <span class="ps-2">Класс</span>
+                            <div class="col text-center">
+                                    <span th:each="classification : ${T(m7.only.carrental.entity.car.Classification).values()}">
+                                        <input class="form-check-input" type="checkbox"
+                                               th:id="${classification}"
+                                               th:value="${classification}"
+                                               th:name="'classifications'"
+                                               th:checked="${car.getClassifications().contains(classification)}">
+                                        <label class="form-check-label" th:for="${classification}"
+                                               th:text="${classification.getClassificationType()}">
+                                        </label>
+                                    </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-3 justify-content-center">
+                        <div class="col-md-4">
+                            <label for="cover" class="ps-2">Главное фото</label>
+                            <input type="file" name="cover" class="form-control rounded-3" id="cover"
+                                   placeholder="Главное фото">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="photos" class="ps-2">Остальные фото</label>
+                            <input type="file" name="photos" class="form-control rounded-3" id="photos"
+                                   placeholder="Остальные фото"
+                                   multiple="multiple">
+                        </div>
+                    </div>
+                    <div class="row mb-3 justify-content-center">
+                        <button type="submit" class="w-25 mb-2 btn btn-lg rounded-3 btn-warning">Обновить</button>
+                    </div>
+                </form>
+                <form th:action="'/admin/cars/update/photo/delete/' + ${car.getId()}"
+                      enctype="multipart/form-data" th:method="POST" class="form-floating g-3"
+                th:if="${car.getPhotos().size()!=0}">
+                    <div class="row justify-content-center">
+                        <div th:each="photo : ${car.getPhotos()}" class="mb-3 me-3"
+                             style="max-width: 20rem">
+                            <input class="form-check-input" type="checkbox"
+                                   th:id="${photo.getFileName()}"
+                                   th:value="${photo.getId()}"
+                                   th:name="'deletePhotoId'">
+                            <label class="form-check-label" th:for="${photo.getFileName()}">
+                                Удалить
+                            </label>
+                            <img th:src="@{/cars/{carId}/{fileName}(carId = ${car.getId()}, fileName=${photo.getFileName()})}"
+                                 class="img-thumbnail" alt="">
+                        </div>
+                    </div>
+                    <div class="row mb-3 justify-content-center">
+                        <button type="submit" class="w-25 mb-2 btn btn-lg rounded-3 btn-danger">Удалить фото</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</content>
+</html>

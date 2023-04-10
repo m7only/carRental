@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html" class="h-100"
+      xmlns:th="https://www.thymeleaf.org"
+      th:replace="~{fragment/sourceLayout :: layout(~{::title}, ~{::content})}">
+<title>Панель администратора - Заказы</title>
+<content>
+    <div class="container p-3 text-center">
+        <h4 class="fw-bold">Панель администратора - Заказы</h4>
+        <span th:text="${message}"></span>
+        <div class="row justify-content-end">
+            <div class="col-md-2">
+                <ul class="pagination pagination-sm">
+                    <li class="page-item">
+                        <a class="page-link" th:href="'?page=0' + '&atPage=' + ${ordersList.getSize()}"
+                           aria-label="Предыдущая">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    <li class="page-item" th:if="${ordersList.getNumber()}!=0">
+                        <a class="page-link"
+                           th:href="'?page=' + ${ordersList.getNumber() - 1} + '&atPage=' + ${ordersList.getSize()}"
+                           th:text="${ordersList.getNumber()}"></a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link active"
+                           th:href="'?page=' + ${ordersList.getNumber()} + '&atPage=' + ${ordersList.getSize()}"
+                           th:text="${ordersList.getNumber()} + 1"></a>
+                    </li>
+                    <li class="page-item" th:if="${ordersList.getNumber()} != (${ordersList.getTotalPages()} -1)">
+                        <a class="page-link"
+                           th:href="'?page=' + ${ordersList.getNumber() + 1} + '&atPage=' + ${ordersList.getSize()}"
+                           th:text="${ordersList.getNumber() + 2}"></a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link"
+                           th:href="'?page=' + ${ordersList.getTotalPages()-1} + '&atPage=' + ${ordersList.getSize()}"
+                           aria-label="Следующая">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-2">
+                <ul class="pagination pagination-sm">
+                    <li class="page-item">
+                        <a class="page-link" th:href="'?page=0&atPage=3'"
+                           th:classappend="${ordersList.getSize()}==3 ? 'active' : ''">3</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" th:href="'?page=0&atPage=10'"
+                           th:classappend="${ordersList.getSize()}==10 ? 'active' : ''">10</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" th:href="'?page=0&atPage=25'"
+                           th:classappend="${ordersList.getSize()}==25 ? 'active' : ''">25</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" th:href="'?page=0&atPage=50'"
+                           th:classappend="${ordersList.getSize()}==50 ? 'active' : ''">50</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" th:href="'?page=0&atPage=' + ${ordersList.getTotalElements()}"
+                           th:classappend="${ordersList.getSize() == ordersList.getTotalElements()} ? 'active' : ''">Все</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <table class="table table-sm table-light table-striped table-hover border-bottom border-dark">
+            <thead>
+            <tr>
+                <th scope="col">Автомобиль</th>
+                <th scope="col">Клиент</th>
+                <th scope="col">Выдача авто</th>
+                <th scope="col">Сдача авто</th>
+                <th scope="col">Состояние</th>
+                <th scope="col">Итоговая цена</th>
+                <th scope="col">Изм</th>
+                <th scope="col">Уд / Вост</th>
+            </tr>
+            </thead>
+            <tbody class="table-group-divider">
+            <tr th:each="order : ${ordersList.getContent()}"
+                th:classappend="${order.getActive()} ?  '' : 'table-dark'"
+                class="small border-bottom border-dark">
+                <td class="text-start">
+                    <h6 th:text="${order.getCar().getManufacturer()} + ' ' + ${order.getCar().getModel()} +', ' + ${order.getCar().getYear()}"></h6>
+                    <div class="row">
+                        <div class="col-md-auto">
+                            <img th:each="photo : ${order.getCar().getPhotos()}"
+                                 th:if="${photo.getCover()}"
+                                 th:src="@{/cars/{carId}/{fileName}(carId = ${order.getCar().getId()}, fileName='p_' + ${photo.getFileName()})}"
+                                 class="img-thumbnail" style="max-width: 100px; max-height: 100px" alt="">
+                        </div>
+                        <div class="col-md">
+                            <div th:text="${order.getCar().getPrice()}" class="fw-bold"></div>
+                            <div th:text="${order.getCar().getPlate()}"></div>
+                        </div>
+                    </div>
+                </td>
+                <td class="text-start">
+                    <h6 th:text="
+                        ${order.getUser().getPersonalityData().getName()}
+                        + ' '
+                        + ${order.getUser().getPersonalityData().getPatronymic()}
+                        + ' '
+                        + ${order.getUser().getPersonalityData().getLastName()}">
+                    </h6>
+                    <div th:text="${order.getUser().getPersonalityData().getPhone()}"></div>
+                </td>
+                <td>
+                    <div th:text="${#temporals.format(order.getStart(), 'HH:mm dd.MM.yyyy')}"></div>
+                </td>
+                <td>
+                    <div th:text="${#temporals.format(order.getEnd(), 'HH:mm dd.MM.yyyy')}"></div>
+                </td>
+                <td>
+                    <div th:text="${order.getStatus().getStatus()}"></div>
+                </td>
+                <td>
+                    <div th:text="${order.getTotalPrice()}"></div>
+                </td>
+                <td>
+                    <a th:href="@{'/admin/orders/update' + ${order.getId()}}">Изм</a>
+                </td>
+                <td>
+                    <a th:href="@{'/admin/orders/remove/' + ${order.getId()}}" th:if="${order.getActive()}">Уд</a>
+                    <a th:href="@{'/admin/orders/reduce/' + ${order.getId()}}" th:unless="${order.getActive()}">Вост</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</content>
+</html>

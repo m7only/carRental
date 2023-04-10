@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html" class="h-100"
+      xmlns:th="https://www.thymeleaf.org"
+      th:replace="~{fragment/sourceLayout :: layout(~{::title}, ~{::content})}">
+<title>Car Rent - Настройки аккаунта</title>
+<content>
+    <div class="row w-100">
+        <div class="col">
+            <div class="col container p-3 text-center">
+                <h5 class="fw-bold" th:text="'Настройки аккаунта ID ' + ${userId} + ' ' + ${personalityData.getUser().getUsername()}"></h5>
+            </div>
+            <div th:text="${message}" class="text-center"></div>
+            <div class="col">
+                <form th:action="'/admin/users/update/' + ${userId}"
+                      enctype="multipart/form-data" th:method="POST" class="form-floating g-3">
+                    <div class="row justify-content-center">
+                        <div class="col-md-3 text-start">
+                            <div th:each="role : ${T(m7.only.carrental.entity.user.Role).values()}">
+                                <input class="form-check-input" type="checkbox"
+                                       th:id="${role}"
+                                       th:value="${role}"
+                                       th:name="'roles'"
+                                       th:checked="${personalityData.getUser().getRoles().contains(role)}">
+                                <label class="form-check-label" th:for="${role}" th:text="${role}"></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-3 justify-content-center">
+                        <div class="col-md-2">
+                            <label for="name" class="ps-2">Имя</label>
+                            <input type="text" class="form-control rounded-3" name="name" id="name" required
+                                   th:value="${personalityData.getName() != null} ? ${personalityData.getName()} : ''"
+                                   placeholder="Имя">
+                        </div>
+                        <div class="col-md-2">
+                            <label for="last_name" class="ps-2">Фамилия</label>
+                            <input type="text" name="lastName" class="form-control rounded-3" id="last_name" required
+                                   th:value="${personalityData.getLastName()!=null} ? ${personalityData.getLastName()} : ''"
+                                   placeholder="Фамилия">
+                        </div>
+                        <div class="col-md-2">
+                            <label for="patronymic" class="ps-2">Отчество</label>
+                            <input type="text" name="patronymic" class="form-control rounded-3" id="patronymic" required
+                                   th:value="${personalityData.getPatronymic() != null} ? ${personalityData.getPatronymic()} : ''"
+                                   placeholder="Отчество">
+                        </div>
+                        <div class="col-md-2">
+                            <label for="phone" class="ps-2">Телефон</label>
+                            <input type="text" name="phone" class="form-control rounded-3" id="phone" required
+                                   th:value="${personalityData.getPhone() != null} ? ${personalityData.getPhone()} : ''"
+                                   placeholder="Телефон">
+                        </div>
+                    </div>
+
+                    <div class="row mb-3 justify-content-center">
+                        <div class="col-md-3">
+                            <label for="passport_number" class="ps-2">Серия и номер паспорта</label>
+                            <input type="text" name="passportNumber" class="form-control rounded-3" id="passport_number"
+                                   required
+                                   th:value="${personalityData.getPassportNumber() != null} ? ${personalityData.getPassportNumber()} : ''"
+                                   placeholder="Серия и номер паспорта">
+                        </div>
+                        <div class="col-md-5">
+                            <label for="photo_passport" class="ps-2">Фото первой страницы паспорта</label>
+                            <input type="file" name="files" class="form-control rounded-3" id="photo_passport"
+                                   placeholder="Фото паспорт">
+                        </div>
+                    </div>
+
+                    <div class="row mb-3 justify-content-center">
+                        <div class="col-md-3">
+                            <label for="driver_licence_number" class="ps-2">Номер ВУ</label>
+                            <input type="text" name="driverLicenseNumber" class="form-control rounded-3"
+                                   id="driver_licence_number"
+                                   required
+                                   th:value="${personalityData.getDriverLicenseNumber() != null} ? ${personalityData.getDriverLicenseNumber()} : ''"
+                                   placeholder="Номер ВУ">
+                        </div>
+                        <div class="col-md-5">
+                            <label for="photo_driver_licence" class="ps-2">Фото ВУ</label>
+                            <input type="file" name="files" class="form-control rounded-3" id="photo_driver_licence"
+                                   placeholder="Фото ВУ">
+                        </div>
+                    </div>
+                    <div class="row justify-content-center">
+                        <div th:each="photo : ${personalityData.getDocs()}" class="mb-3 me-3"
+                             style="max-width: 20rem">
+                            <img th:src="@{/account/personalData/{userId}/{fileName}(userId = ${personalityData.getUser().getId()}, fileName=${photo.getFileName()})}"
+                                 class="img-thumbnail" alt="">
+                        </div>
+                    </div>
+                    <div class="row mb-3 justify-content-center">
+                        <button type="submit" class="w-25 mb-2 btn btn-lg rounded-3 btn-warning">Обновить</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</content>
+</html>
