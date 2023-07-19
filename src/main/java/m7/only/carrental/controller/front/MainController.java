@@ -17,7 +17,7 @@ public class MainController {
      */
     @GetMapping("/")
     public String main() {
-        return "/front/main";
+        return "front/main";
     }
 
     /**
@@ -28,7 +28,7 @@ public class MainController {
      */
     @GetMapping("/prices")
     public String prices() {
-        return "/front/prices";
+        return "front/prices";
     }
 
     /**
@@ -39,7 +39,7 @@ public class MainController {
      */
     @GetMapping("/terms")
     public String terms() {
-        return "/front/terms";
+        return "front/terms";
     }
 
     /**
@@ -50,7 +50,7 @@ public class MainController {
      */
     @GetMapping("/about")
     public String about() {
-        return "/front/about";
+        return "front/about";
     }
 
 }

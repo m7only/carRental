@@ -10,7 +10,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class MvcConfig implements WebMvcConfigurer {
     public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/login").setViewName("/front/login");
-        registry.addViewController("/accessDenied").setViewName("/error/accessDenied");
+        registry.addViewController("/login").setViewName("front/login");
+        registry.addViewController("/accessDenied").setViewName("error/accessDenied");
     }
 }
