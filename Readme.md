@@ -28,7 +28,43 @@ CRUD для пользователей, заказов и автомобилей
 
 ### Запуск
 
-Запуск через IDE: src/main/java/com/m7/mvc_test/MvcTestApplication.java
+Пользователь с админ-правами:
+* логин q
+* пароль q
+
+Запуск с помощью docker: `docker-compose -p car-rent up`. Файл docker-compose.yml:
+```
+version: '4'
+services:
+  client-backend:
+    image: m7only/rent:0.0.1
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - service-db
+    environment:
+      - SERVER_PORT= 8080
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://service-db/rent
+
+  service-db:
+    image: postgres:14.7-alpine
+    environment:
+      POSTGRES_DB: rent
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+    ports:
+      - "15432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+  db-data:
+
+```
 
 ### Дальнейшие планы
 #### Технически:

@@ -52,7 +52,7 @@ public class AdminCarsController {
                                      @RequestParam(name = "atPage", required = false, defaultValue = "25") Integer atPage,
                                      Model model) {
         model.addAttribute("carsList", carService.findAllCarsPage(page, atPage));
-        return "/admin/adminPanelCars";
+        return "admin/adminPanelCars";
     }
 
     /**
@@ -65,7 +65,7 @@ public class AdminCarsController {
     @GetMapping("/add")
     @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
     public String adminPanelAddCarView() {
-        return "/admin/adminPanelCarAdd";
+        return "admin/adminPanelCarAdd";
     }
 
     /**
@@ -88,9 +88,9 @@ public class AdminCarsController {
             redirectAttributes.addFlashAttribute(
                     "message",
                     "Автомобиль с таким госномером уже существует");
-            return "redirect:/admin/cars/add";
+            return "redirect:admin/cars/add";
         }
-        return "redirect:/admin/cars/update/" + car.getId();
+        return "redirect:admin/cars/update/" + car.getId();
     }
 
     /**
@@ -108,7 +108,7 @@ public class AdminCarsController {
         model.addAttribute(
                 "car",
                 carService.findCarById(carId));
-        return "/admin/adminPanelCarUpdate";
+        return "admin/adminPanelCarUpdate";
     }
 
     /**
@@ -131,12 +131,12 @@ public class AdminCarsController {
             redirectAttributes.addFlashAttribute(
                     "message",
                     "Произошла ошибка при обновлении");
-            return "redirect:/admin/cars/update/" + carId;
+            return "redirect:admin/cars/update/" + carId;
         }
         redirectAttributes.addFlashAttribute(
                 "message",
                 "Автомобиль обновлен");
-        return "redirect:/admin/cars/update/" + carId;
+        return "redirect:admin/cars/update/" + carId;
     }
 
     /**
@@ -160,7 +160,7 @@ public class AdminCarsController {
         redirectAttributes.addFlashAttribute(
                 "message",
                 "Автомобиль ID=" + carId + " помечен как удаленный");
-        return "redirect:/admin/cars";
+        return "redirect:admin/cars";
     }
 
     /**
@@ -185,7 +185,7 @@ public class AdminCarsController {
         redirectAttributes.addFlashAttribute(
                 "message",
                 "Автомобиль ID=" + carId + " восстановлен");
-        return "redirect:/admin/cars";
+        return "redirect:admin/cars";
     }
 
     /**
@@ -208,6 +208,6 @@ public class AdminCarsController {
                 "message",
                 "Фото ID=" + Arrays.toString(deletePhotoId) + " уделены");
 
-        return "redirect:/admin/cars/update/" + carId;
+        return "redirect:admin/cars/update/" + carId;
     }
 }

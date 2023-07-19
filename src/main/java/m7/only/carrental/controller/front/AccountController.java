@@ -40,7 +40,7 @@ public class AccountController {
                 "personalityData",
                 userService.getCurrentUserPersonalityData().orElse(new PersonalityData()));
         model.addAttribute("ordersList", orderService.getOrdersByUser(userService.getCurrentUser()));
-        return "/front/account";
+        return "front/account";
     }
 
     /**
@@ -59,9 +59,9 @@ public class AccountController {
         User user = userService.getCurrentUser();
         if (user == null || userService.updatePersonalityData(user.getId(), personalityDataDTO) == null) {
             redirectAttributes.addFlashAttribute("message", "Произошла ошибка при обновлении");
-            return "redirect:/account";
+            return "redirect:account";
         }
         redirectAttributes.addFlashAttribute("message", "Аккаунт обновлен");
-        return "redirect:/account";
+        return "redirect:account";
     }
 }

@@ -58,6 +58,6 @@ public class CarController {
         model.addAttribute("endDate", end);
         model.addAttribute("checkedClassifications", classifications != null ? Arrays.stream(classifications).toList() : null);
         model.addAttribute("checkedCarBodies", carBodies != null ? Arrays.stream(carBodies).toList() : null);
-        return "/front/cars";
+        return "front/cars";
     }
 }

@@ -28,7 +28,7 @@ public class RegistrationController {
      */
     @GetMapping("/registration")
     public String showRegistration() {
-        return "/front/registration";
+        return "front/registration";
     }
 
     /**

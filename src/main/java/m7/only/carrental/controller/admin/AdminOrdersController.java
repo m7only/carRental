@@ -49,7 +49,7 @@ public class AdminOrdersController {
                                    @RequestParam(name = "atPage", required = false, defaultValue = "25") Integer atPage,
                                    Model model) {
         model.addAttribute("ordersList", orderService.getAllOrders(page, atPage));
-        return "/admin/adminPanelOrders";
+        return "admin/adminPanelOrders";
     }
 
 }

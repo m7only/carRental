@@ -48,7 +48,7 @@ public class AdminUsersController {
                                       @RequestParam(name = "atPage", required = false, defaultValue = "25") Integer atPage,
                                       Model model) {
         model.addAttribute("usersList", userService.getAllUsers(page, atPage));
-        return "/admin/adminPanelUsers";
+        return "admin/adminPanelUsers";
     }
 
     /**
@@ -65,7 +65,7 @@ public class AdminUsersController {
         model.addAttribute(
                 "personalityData",
                 userService.getPersonalityByUserId(userId).orElse(new PersonalityData()));
-        return "/admin/adminPanelUserUpdate";
+        return "admin/adminPanelUserUpdate";
     }
 
     /**
@@ -87,10 +87,10 @@ public class AdminUsersController {
         if (userService.updatePersonalityData(userId, personalityDataDTO) == null
                 || userService.updateRoles(userId, roles) == null) {
             redirectAttributes.addFlashAttribute("message", "Произошла ошибка при обновлении");
-            return "redirect:/admin/users/update/" + userId;
+            return "redirect:admin/users/update/" + userId;
         }
         redirectAttributes.addFlashAttribute("message", "Аккаунт обновлен");
-        return "redirect:/admin/users/update/" + userId;
+        return "redirect:admin/users/update/" + userId;
     }
 
     /**
@@ -110,7 +110,7 @@ public class AdminUsersController {
             redirectAttributes.addFlashAttribute("message", "Удалить не удалось");
         }
         redirectAttributes.addFlashAttribute("message", "Пользователь ID=" + userId + " помечен как удаленный");
-        return "redirect:/admin/users";
+        return "redirect:admin/users";
     }
 
     /**
@@ -130,7 +130,7 @@ public class AdminUsersController {
             redirectAttributes.addFlashAttribute("message", "Восстановить не удалось");
         }
         redirectAttributes.addFlashAttribute("message", "Пользователь ID=" + userId + " восстановлен");
-        return "redirect:/admin/users";
+        return "redirect:admin/users";
     }
 
     /**
@@ -151,6 +151,6 @@ public class AdminUsersController {
             redirectAttributes.addFlashAttribute("message", "Произошла ошибка при обновлении");
         }
         redirectAttributes.addFlashAttribute("message", "Аккаунт ID=" + userId + " обновлен");
-        return "redirect:/admin/users";
+        return "redirect:admin/users";
     }
 }

@@ -28,6 +28,6 @@ public class AdminController {
      */
     @GetMapping
     public String adminPanelView() {
-        return "/admin/adminPanel";
+        return "admin/adminPanel";
     }
 }

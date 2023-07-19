@@ -84,7 +84,7 @@ public class UserServiceImpl implements UserService {
         } catch (ServletException e) {
             throw new RuntimeException(e);
         }
-        return "redirect:/account";
+        return "redirect:account";
     }
 
     /**

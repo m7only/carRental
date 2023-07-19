@@ -46,10 +46,10 @@ public class OrderController {
         Order order = orderService.addOrder(carId, start, end);
         if (order != null) {
             redirectAttributes.addFlashAttribute("orderCreated", true);
-            return "redirect:/account#order_" + order.getId();
+            return "redirect:account#order_" + order.getId();
         }
         redirectAttributes.addFlashAttribute("orderCreated", false);
-        return "redirect:/account";
+        return "redirect:account";
     }
 
     /**
@@ -65,7 +65,7 @@ public class OrderController {
     @PreAuthorize("hasAnyRole('APPROVED_CLIENT', 'MANAGER', 'ADMIN')")
     public String orderCancelView(@PathVariable Long orderId, Model model) {
         model.addAttribute("order", orderService.getOrderById(orderId).orElse(new Order()));
-        return "/front/orderCancel";
+        return "front/orderCancel";
     }
 
     /**
@@ -85,6 +85,6 @@ public class OrderController {
         } else {
             redirectAttributes.addFlashAttribute("message", "Заказ №" + orderId + " отменить не удалось");
         }
-        return "redirect:/account#order_" + orderId;
+        return "redirect:account#order_" + orderId;
     }
 }
